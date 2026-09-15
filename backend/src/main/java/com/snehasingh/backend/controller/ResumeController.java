@@ -54,6 +54,7 @@ public class ResumeController {
             response.put("fileName", file.getOriginalFilename());
             response.put("skillsFound", foundSkills.toString());
             response.put("textLength", text.length());
+            response.put("extractedText", text); // Job matching ke liye pura text bhi bhej rahe hain
 
         } catch (Exception e) {
             // Agar kuch galat ho jaye (jaise corrupt PDF), to error message bhejo
@@ -61,5 +62,10 @@ public class ResumeController {
             response.put("error", e.getMessage());
         }
         return response;
+    }
+    // Ye endpoint database me saare saved resumes dikhayega (H2 console ke bina test karne ke liye)
+    @GetMapping("/all")
+    public java.util.List<Resume> getAllResumes() {
+        return resumeRepository.findAll();
     }
 }

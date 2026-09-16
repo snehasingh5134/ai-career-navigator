@@ -61,6 +61,9 @@ function App() {
           <p><b>Skills Found:</b> {result.skillsFound}</p>
           <p><b>Text Length:</b> {result.textLength} characters</p>
 
+          <h3>AI Suggestions</h3>
+          <p style={{ whiteSpace: 'pre-line' }}>{result.aiSuggestions}</p>
+
           <h3>Job Match</h3>
           <textarea
             placeholder="Job description yaha paste karo"

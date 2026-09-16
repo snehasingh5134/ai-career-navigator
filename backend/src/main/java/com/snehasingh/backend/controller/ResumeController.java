@@ -24,6 +24,9 @@ public class ResumeController {
     @Autowired
     private com.snehasingh.backend.service.GeminiService geminiService;
 
+    @Autowired
+    private com.snehasingh.backend.service.AtsService atsService;
+
     // Ye function tab chalega jab React "/api/resume/upload" pe POST request bhejega (file ke saath)
     @PostMapping("/upload")
     public Map<String, Object> uploadResume(@RequestParam("file") MultipartFile file) {
@@ -61,9 +64,10 @@ public class ResumeController {
             
             // Gemini AI se suggestions maango
             String aiSuggestions = geminiService.getResumeSuggestions(text);
+            response.put("aiSuggestions", aiSuggestions);
+
             int atsScore = atsService.calculateAtsScore(text);
             response.put("atsScore", atsScore);
-            response.put("aiSuggestions", aiSuggestions);
 
         } catch (Exception e) {
             // Agar kuch galat ho jaye (jaise corrupt PDF), to error message bhejo
@@ -77,6 +81,4 @@ public class ResumeController {
     public java.util.List<Resume> getAllResumes() {
         return resumeRepository.findAll();
     }
-    @Autowired
-    private com.snehasingh.backend.service.AtsService atsService;
 }

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import './App.css';
 
 function App() {
   const [file, setFile] = useState(null);
@@ -44,44 +45,55 @@ function App() {
   };
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px', fontFamily: 'Arial' }}>
-      <h1>AI Career Navigator</h1>
-      <p>Apna resume (PDF) upload karo</p>
+    <div className="app-container">
+      <div className="header">
+        <h1>AI Career Navigator</h1>
+        <p>Apna resume upload karo aur AI-powered analysis paao</p>
+      </div>
 
-      <input type="file" accept=".pdf" onChange={(e) => setFile(e.target.files[0])} />
-      <br /><br />
-      <button onClick={handleUpload} disabled={loading}>
-        {loading ? 'Analyzing...' : 'Upload & Analyze'}
-      </button>
+      <div className="card upload-section">
+        <input type="file" accept=".pdf" onChange={(e) => setFile(e.target.files[0])} />
+        <br />
+        <button onClick={handleUpload} disabled={loading}>
+          {loading ? 'Analyzing...' : 'Upload & Analyze'}
+        </button>
+      </div>
 
       {result && (
-        <div style={{ marginTop: '30px', textAlign: 'left', maxWidth: '500px', margin: '30px auto' }}>
-          <h3>Result:</h3>
-          <p><b>File:</b> {result.fileName}</p>
-          <p><b>Skills Found:</b> {result.skillsFound}</p>
-          <p><b>Text Length:</b> {result.textLength} characters</p>
+        <>
+          <div className="card">
+            <h3>ATS Score</h3>
+            <div className="score-badge">{result.atsScore} / 100</div>
 
-          <h3>AI Suggestions</h3>
-          <p style={{ whiteSpace: 'pre-line' }}>{result.aiSuggestions}</p>
-
-          <h3>Job Match</h3>
-          <textarea
-            placeholder="Job description yaha paste karo"
-            rows="5"
-            style={{ width: '100%' }}
-            value={jobDescription}
-            onChange={(e) => setJobDescription(e.target.value)}
-          />
-          <br /><br />
-          <button onClick={handleJobMatch}>Check Job Match</button>
-
-          {matchResult && (
-            <div style={{ marginTop: '15px' }}>
-              <p><b>Match Percentage:</b> {matchResult.matchPercentage}%</p>
-              <p><b>Matched Keywords:</b> {matchResult.matchedKeywords} / {matchResult.totalKeywords}</p>
+            <h3>Skills Found</h3>
+            <div className="skills-list">
+              {result.skillsFound.split(',').filter(s => s.trim()).map((skill, i) => (
+                <span key={i} className="skill-tag">{skill.trim()}</span>
+              ))}
             </div>
-          )}
-        </div>
+
+            <h3>AI Suggestions</h3>
+            <div className="ai-suggestions">{result.aiSuggestions}</div>
+          </div>
+
+          <div className="card">
+            <h3>Job Description Match</h3>
+            <textarea
+              placeholder="Job description yaha paste karo..."
+              rows="5"
+              value={jobDescription}
+              onChange={(e) => setJobDescription(e.target.value)}
+            />
+            <button onClick={handleJobMatch}>Check Job Match</button>
+
+            {matchResult && (
+              <div className="match-result">
+                <p><b>Match:</b> {matchResult.matchPercentage}%</p>
+                <p><b>Matched Keywords:</b> {matchResult.matchedKeywords} / {matchResult.totalKeywords}</p>
+              </div>
+            )}
+          </div>
+        </>
       )}
     </div>
   );
